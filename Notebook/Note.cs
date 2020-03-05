@@ -191,8 +191,8 @@ namespace Notebook
             return format.ToUpperInvariant() switch
             {
                 "S" => $"{this.Title.ToString(formatProvider)}.",
-                "F" => $"{this.TimeOfCreation.ToString(formatProvider)}, {this.Title.ToString(formatProvider)}:\n{this.Content.ToString(formatProvider)}",
-                "E" => $"{this.TimeOfCreation.ToString(formatProvider)}, {this.Title.ToString(formatProvider)}.",
+                "F" => $"{this.TimeOfCreation.ToString("MMMM dd, yyyy", formatProvider)}, {this.Title.ToString(formatProvider)}:\n{this.Content.ToString(formatProvider)}",
+                "E" => $"{this.TimeOfCreation.ToString("MMMM dd, yyyy", formatProvider)}, {this.Title.ToString(formatProvider)}.",
                 "R" => $"{this.Content.ToString(formatProvider)}",
                 _ => throw new FormatException($"'{nameof(format)}' format is not supported.")
             };
