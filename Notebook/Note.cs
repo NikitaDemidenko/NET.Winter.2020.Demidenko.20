@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Threading;
 
 namespace Notebook
 {
     /// <summary>Provides methods and properties for interaction with notes.</summary>
     /// <seealso cref="System.IEquatable{Notebook.Note}" />
     /// <seealso cref="System.IComparable{Notebook.Note}" />
-    public class Note : IEquatable<Note>, IComparable<Note>, IComparable
+    public class Note : IEquatable<Note>, IComparable<Note>, IComparable, IFormattable
     {
         /// <summary>Initializes a new instance of the <see cref="Note"/> class.</summary>
         /// <param name="content">Content of note.</param>
@@ -132,7 +133,7 @@ namespace Notebook
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            return $"{this.Title}, {this.TimeOfCreation.ToString(CultureInfo.InvariantCulture)}: {this.Content}";
+            return this.ToString("F", Thread.CurrentThread.CurrentCulture);
         }
 
         /// <summary>
@@ -161,6 +162,40 @@ namespace Notebook
 
             var otherNote = obj as Note;
             return otherNote != null ? this.CompareTo(otherNote) : throw new ArgumentException($"{nameof(obj)} isn't Note.");
+        }
+
+        /// <summary>Converts to string.</summary>
+        /// <param name="format">The format.</param>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
+        public string ToString(string format)
+        {
+            return this.ToString(format, Thread.CurrentThread.CurrentCulture);
+        }
+
+        /// <summary>Converts to string.</summary>
+        /// <param name="format">The format.</param>
+        /// <param name="formatProvider">The format provider.</param>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (format is null)
+            {
+                format = "F";
+            }
+
+            if (formatProvider is null)
+            {
+                formatProvider = Thread.CurrentThread.CurrentCulture;
+            }
+
+            return format.ToUpperInvariant() switch
+            {
+                "S" => $"{this.Title.ToString(formatProvider)}.",
+                "F" => $"{this.TimeOfCreation.ToString(formatProvider)}, {this.Title.ToString(formatProvider)}:\n{this.Content.ToString(formatProvider)}",
+                "E" => $"{this.TimeOfCreation.ToString(formatProvider)}, {this.Title.ToString(formatProvider)}.",
+                "R" => $"{this.Content.ToString(formatProvider)}",
+                _ => throw new FormatException($"'{nameof(format)}' format is not supported.")
+            };
         }
     }
 }
