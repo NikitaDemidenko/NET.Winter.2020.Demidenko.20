@@ -194,7 +194,7 @@ namespace Notebook
                 "F" => $"{this.TimeOfCreation.ToString("MMMM dd, yyyy", formatProvider)}, {this.Title.ToString(formatProvider)}:\n{this.Content.ToString(formatProvider)}",
                 "E" => $"{this.TimeOfCreation.ToString("MMMM dd, yyyy", formatProvider)}, {this.Title.ToString(formatProvider)}.",
                 "R" => $"{this.Content.ToString(formatProvider)}",
-                _ => throw new FormatException($"'{nameof(format)}' format is not supported.")
+                _ => throw new FormatException($"'{format}' format is not supported.")
             };
         }
     }
